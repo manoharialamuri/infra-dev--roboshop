@@ -22,3 +22,9 @@ mongodb:
   src: user
   dest: mongodb
 
+#redis accepting connection from bastion
+- name: redis_bastion
+  port: 22
+  src: bastion
+  dest: redis
+
