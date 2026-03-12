@@ -27,7 +27,7 @@ resource "terraform_data" "mongodb" {
   }
 
   # File provisioner to copy a script to the instance
-provisioner "file" {
+  provisioner "file" {
     source = "bootstrap.sh" # Local file path
     destination = "/tmp/bootstrap.sh" # Remote destination path
 }
