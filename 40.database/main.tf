@@ -129,7 +129,7 @@ resource "terraform_data" "bootstrap_mysql" {
     inline = [
         
         "chmod +x /tmp/bootstrap.sh",  
-        "sudo sh /tmp/bootstrap.sh mysql"
+        "sudo sh /tmp/bootstrap.sh mysql ${var.enviornment}"
     ] 
   }
 }
