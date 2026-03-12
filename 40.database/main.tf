@@ -7,7 +7,7 @@ resource "aws_instance" "mongodb" {
   tags = merge(
     
     {
-        name = "${var.project}-${var.enviornment}-mongodb"
+        Name = "${var.project}-${var.enviornment}-mongodb"
     },
     local.common_tags
   )
@@ -34,7 +34,7 @@ provisioner "file" {
 
   provisioner "remote-exec" {
     inline = [
-        "chmod +x /tmp/bootstrap.sh"    
+        "chmod +x /tmp/bootstrap.sh",  
         "sudo sh /tmp/bootstrap.sh"
     ] 
   }
