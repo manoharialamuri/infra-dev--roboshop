@@ -1,5 +1,6 @@
 resource "aws_iam_role" "mysql" {
   name = local.mysql_role_name #Roboshop-Dev-Mysql
+  
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
   assume_role_policy = jsonencode({
@@ -15,6 +16,7 @@ resource "aws_iam_role" "mysql" {
       },
     ]
   })
+  
 
   tags = merge(
     {
@@ -24,12 +26,8 @@ resource "aws_iam_role" "mysql" {
   )
 }
 
-resource "aws_iam_role_policy_attachment" "bastion" {
-  role       = aws_iam_role.bastion.name
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-}
-
-resource "aws_iam_instance_profile" "bastion" {
-  name = "${var.project}-${var.enviornment}-bastion"
-  role = aws_iam_role.bastion.name
+resource "aws_iam_policy" "mysql" {
+  name         = "S3ReadOnlyAccessPolicy"
+  description = "A Policy for Mysql EC2 Instance"
+  policy  = file(mysql_iam_policy.json)
 }
