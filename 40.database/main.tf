@@ -41,23 +41,24 @@ resource "terraform_data" "bootstrap" {
     ] 
   }
 }
-#creating redis
-resource "aws_instance" "redis" {
+
+#creating mysql
+resource "aws_instance" "mysql" {
   ami           = local.ami_id
   instance_type = "t3.micro"
   subnet_id = local.database_subnet_ids
-  vpc_security_group_ids = [local.redis_sg_id]
+  vpc_security_group_ids = [local.mysql_sg_id]
 
   tags = merge(
     
     {
-        Name = "${var.project}-${var.enviornment}-redis"
+        Name = "${var.project}-${var.enviornment}-mysql"
     },
     local.common_tags
   )
 }
 
-resource "terraform_data" "bootstrap_redis" {
+resource "terraform_data" "bootstrap_mysql" {
   triggers_replace = [
     aws_instance.mongodb.id,
     timestamp()
@@ -69,7 +70,7 @@ resource "terraform_data" "bootstrap_redis" {
   type = "ssh"
   user = "ec2-user"
   password = "DevOps321"
-  host = aws_instance.redis.private_ip
+  host = aws_instance.mysql.private_ip
   }
 
   # File provisioner to copy a script to the instance
@@ -81,7 +82,7 @@ resource "terraform_data" "bootstrap_redis" {
   provisioner "remote-exec" {
     inline = [
         "chmod +x /tmp/bootstrap.sh",  
-        "sudo sh /tmp/bootstrap.sh redis"
+        "sudo sh /tmp/bootstrap.sh mysql"
     ] 
   }
 }
