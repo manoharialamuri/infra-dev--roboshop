@@ -10,3 +10,10 @@ cd tf.ansible.roles.roboshop
 git pull
 ansible-playbook -e component=$component roboshop.yaml
 
+# create vault password file
+
+mkdir -p /home/ec2-user/.ansible
+
+echo "DevOps321" > /home/ec2-user/.ansible/.mysql_vault_password
+
+chmod 600 /home/ec2-user/.ansible/.mysql_vault_password
