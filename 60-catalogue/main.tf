@@ -53,4 +53,12 @@ resource "aws_ami_from_instance" "catalogue" {
   name               = "${var.project}-${var.enviornment}-catalogue"
   source_instance_id = aws_instance.catalogue.id
   depends_on = [ aws_ec2_instance_state.catalogue ]
+
+tags = merge(
+    
+    {
+        Name = "${var.project}-${var.enviornment}-catalogue"
+    },
+    local.common_tags
+  )
 }
