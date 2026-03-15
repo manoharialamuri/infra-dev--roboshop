@@ -82,3 +82,27 @@ resource "aws_security_group_rule" "backend_alb_bastion" {
   #where we are using this ag rule
   security_group_id = local.backend_alb_sg_id
 }
+
+#catalogue accepting connections from bastion
+resource "aws_security_group_rule" "catalogue_bastion" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  #where traffic is coming from bastion is the source
+  source_security_group_id = local.bastion_sg_id
+  #where we are using this ag rule
+  security_group_id = local.catalogue_sg_id
+}
+
+#catalogue accepting connections from backend-alb
+resource "aws_security_group_rule" "catalogue_backend_alb" {
+  type              = "ingress"
+  from_port         = 8080
+  to_port           = 8080
+  protocol          = "tcp"
+  #where traffic is coming from backend_alb is the source
+  source_security_group_id = local.backend_alb_sg_id
+  #where we are using this ag rule
+  security_group_id = local.catalogue_sg_id
+}
