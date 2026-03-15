@@ -37,7 +37,7 @@ resource "terraform_data" "catalogue" {
   provisioner "remote-exec" {
     inline = [
         "chmod +x /tmp/bootstrap.sh",  
-        "sudo sh /tmp/bootstrap.sh catalogue dev"
+        "sudo sh /tmp/bootstrap.sh catalogue ${var.enviornment} ${var.app_version}"
     ] 
   }
 
@@ -180,6 +180,7 @@ resource "aws_autoscaling_group" "catalogue" {
 resource "aws_autoscaling_policy" "catalogue" {
   autoscaling_group_name = aws_autoscaling_group.catalogue.name
   name                   = "${var.project}-${var.enviornment}-catalogue"
+  estimated_instance_warmup = 120
   policy_type            = "TargetTrackingScaling"
 
 target_tracking_configuration {
