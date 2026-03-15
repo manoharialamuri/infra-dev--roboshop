@@ -16,7 +16,7 @@ resource "aws_instance" "catalogue" {
 resource "terraform_data" "bootstrap" {
   triggers_replace = [
     aws_instance.catalogue.id,
-    timestamp()
+    #timestamp()
     #time stamp for debugging
   ]
 
@@ -43,8 +43,7 @@ resource "terraform_data" "bootstrap" {
 
 }
 
-action "aws_ec2_stop_instance" "catalogue" {
-config {
-instance_id = aws_instance.catalogue.id
-}
+resource "aws_ec2_instance_state" "catalogue" {
+    instance_id = aws_instance.catalogue.id
+    state = "stopped"
 }
