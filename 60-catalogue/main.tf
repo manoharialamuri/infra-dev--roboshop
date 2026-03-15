@@ -13,7 +13,7 @@ resource "aws_instance" "catalogue" {
   )
 }
 
-resource "terraform_data" "bootstrap" {
+resource "terraform_data" "catalogue" {
   triggers_replace = [
     aws_instance.catalogue.id,
     #timestamp()
@@ -46,4 +46,11 @@ resource "terraform_data" "bootstrap" {
 resource "aws_ec2_instance_state" "catalogue" {
     instance_id = aws_instance.catalogue.id
     state = "stopped"
+    depends_on = [ terraform_data.catalogue ]
+}
+
+resource "aws_ami_from_instance" "catalogue" {
+  name               = "${var.project}-${var.enviornment}-catalogue"
+  source_instance_id = aws_instance.catalogue.id
+  depends_on = [ aws_ec2_instance_state.catalogue ]
 }
