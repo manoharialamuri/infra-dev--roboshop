@@ -333,8 +333,8 @@ resource "aws_security_group_rule" "frontend_alb_internet" {
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
-  #cidr_blocks       = ["0.0.0.0/0"]
-  cidr_blocks       = [local.my_ip]
+  cidr_blocks       = ["0.0.0.0/0"]
+  #cidr_blocks       = [local.my_ip]
   #sg will be the dest sg id that is bastion
   security_group_id = local.frontend_alb_sg_id
 }
