@@ -8,7 +8,7 @@ terraform {
 
   backend "s3" {
   bucket = "daws8ss-remote-state-s3"
-  key = "remote_state.backend-alb.tfstate"
+  key = "remote_state.frontend-alb.tfstate"
   region = "us-east-1"
   encrypt = true
   use_lockfile = true
