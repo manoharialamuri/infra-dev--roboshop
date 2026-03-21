@@ -1,5 +1,5 @@
-resource "aws_lb" "backend-alb" {
-  name               = "${var.project}-${var.enviornment}-backend-alb"
+resource "aws_lb" "backend_alb" {
+  name               = "${var.project}-${var.enviornment}"
   internal           = true
   load_balancer_type = "application"
   security_groups    = [local.backend_alb_sg_id]
@@ -10,14 +10,14 @@ resource "aws_lb" "backend-alb" {
 
   tags = merge(
     {
-        Name = "${var.project}-${var.enviornment}-backend-alb"
+        Name = "${var.project}-${var.enviornment}"
     },
     local.common_tags
   )
 }
 
 resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.backend-alb.arn
+  load_balancer_arn = aws_lb.backend_alb.arn
   port              = "80"
   protocol          = "HTTP"
   
@@ -39,8 +39,8 @@ resource "aws_route53_record" "www" {
 
   #load balancer details
   alias {
-    name                   = aws_lb.backend-alb.dns_name
-    zone_id                = aws_lb.backend-alb.zone_id
+    name                   = aws_lb.backend_alb.dns_name
+    zone_id                = aws_lb.backend_alb.zone_id
     evaluate_target_health = true
   }
 }
