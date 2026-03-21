@@ -10,7 +10,7 @@ resource "aws_lb" "frontend-alb" {
 
   tags = merge(
     {
-        Name = "${var.project}-${var.enviornment}-frontend-alb"
+        Name = "${var.project}-${var.enviornment}-frontend"
     },
     local.common_tags
   )
@@ -41,8 +41,8 @@ resource "aws_route53_record" "www" {
 
   #load balancer details
   alias {
-    name                   = aws_lb.frontend-alb.dns_name
-    zone_id                = aws_lb.frontend-alb.zone_id
+    name                   = aws_lb.frontend_alb.dns_name
+    zone_id                = aws_lb.frontend_alb.zone_id
     evaluate_target_health = true
   }
   allow_overwrite = true
