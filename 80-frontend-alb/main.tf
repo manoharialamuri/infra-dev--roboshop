@@ -1,5 +1,5 @@
 resource "aws_lb" "frontend-alb" {
-  name               = "${var.project}-${var.enviornment}-frontend-alb"
+  name               = "${var.project}-${var.enviornment}-frontend"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [local.frontend_alb_sg_id]
@@ -17,7 +17,7 @@ resource "aws_lb" "frontend-alb" {
 }
 
 resource "aws_lb_listener" "https" {
-  load_balancer_arn = aws_lb.frontend-alb.arn
+  load_balancer_arn = aws_lb.frontend_alb.arn
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
