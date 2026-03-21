@@ -314,7 +314,7 @@ resource "aws_security_group_rule" "frontend_bastion" {
   #where traffic is coming from backend_alb is the source
   source_security_group_id = local.bastion_sg_id
   #where we are using this ag rule
-  security_group_id = local.frontend_alb_sg_id
+  security_group_id = local.frontend_sg_id
 }
 
 resource "aws_security_group_rule" "frontend_frontend_alb" {
