@@ -34,6 +34,26 @@ data "aws_ssm_parameter" "user_sg_id" {
   name = "/${var.project}/${var.enviornment}/user_sg_id"
 }
 
+data "aws_ssm_parameter" "cart_sg_id" {
+  name = "/${var.project}/${var.enviornment}/cart_sg_id"
+}
+
+data "aws_ssm_parameter" "shipping_sg_id" {
+  name = "/${var.project}/${var.enviornment}/shipping_sg_id"
+}
+
+data "aws_ssm_parameter" "payment_sg_id" {
+  name = "/${var.project}/${var.enviornment}/payment_sg_id"
+}
+
 data "aws_ssm_parameter" "backend_alb_sg_id" {
   name = "/${var.project}/${var.enviornment}/backend_alb_sg_id"
+}
+
+data "aws_ssm_parameter" "frontend_sg_id" {
+  name = "/${var.project}/${var.enviornment}/frontend_sg_id"
+}
+
+data "aws_ssm_parameter" "frontend_alb_sg_id" {
+  name = "/${var.project}/${var.enviornment}/frontend_alb_sg_id"
 }

@@ -181,6 +181,6 @@ resource "terraform_data" "bootstrap_rabbitmq" {
   }
 }
 
-#for dir in 40.database 30.bastion 20.sg-rules 10-sg 00-vpc; do (cd $dir && terraform destroy -auto-approve); done
+#for dir in 40.database 30.bastion 20-sg-rules 10-sg 00-vpc; do (cd $dir && terraform destroy -auto-approve); done
 
-#for i in 00-vpc/ 10-sg/ 20-sg-rules/ 30-bastion/; do cd $i; terraform apply -auto-approve; cd ..;done
+#for i in 00-vpc/ 10-sg/ 20-sg-rules/ 30-bastion/; 50-backend-alb/; do cd $i; terraform apply -auto-approve; cd ..;done
