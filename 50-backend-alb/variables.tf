@@ -2,7 +2,7 @@ variable "project" {
   default = "roboshop"
 }
 
-variable "enviornment" {
+variable "environment" {
   default = "dev"
 }
 
