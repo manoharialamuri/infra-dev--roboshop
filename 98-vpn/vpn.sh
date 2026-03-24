@@ -1,51 +1,37 @@
 #!/bin/bash
+set -euo pipefail
 
-# Log everything
-exec > /var/log/user-data.log 2>&1
+SCRIPTS="/usr/local/openvpn_as/scripts"
+USERNAME="openvpn"
+PASSWORD='Openvpn@123'   # Use SSM or Secrets Manager in production
 
-echo "Starting OpenVPN setup..."
+# Wait until Access Server UI is ready
+until curl -ks https://127.0.0.1:943/ >/dev/null 2>&1; do sleep 3; done
 
-# Update system
-yum update -y
+# 1. Accept the license agreement
+$SCRIPTS/sacli --key 'eula_accepted' --value 'true' ConfigPut
 
-# Install required packages
-yum install -y ca-certificates wget net-tools gnupg
+# 2. Set admin user and password
+$SCRIPTS/sacli --user "$USERNAME" --new_pass "$PASSWORD" SetLocalPassword
+$SCRIPTS/sacli --user "$USERNAME" --key 'prop_superuser' --value 'true' UserPropPut
 
-# Set hostname (optional)
-hostnamectl set-hostname openvpn-server
+# 3. VPN port and protocol
+$SCRIPTS/sacli --key 'vpn.server.port'     --value '1194' ConfigPut
+$SCRIPTS/sacli --key 'vpn.server.protocol' --value 'udp'  ConfigPut
 
-# Download OpenVPN Access Server
-cd /tmp
-wget https://as-repository.openvpn.net/as-repo-amzn2.rpm
+# 4. DNS configuration: use Access Server host DNS
+$SCRIPTS/sacli --key 'vpn.client.dns.server_auto' --value 'true' ConfigPut
+$SCRIPTS/sacli --key 'cs.prof.defaults.dns.0' --value '8.8.8.8' ConfigPut
+$SCRIPTS/sacli --key 'cs.prof.defaults.dns.1' --value '1.1.1.1' ConfigPut
 
-# Install OpenVPN repo
-yum install -y ./as-repo-amzn2.rpm
+# 5. Route all client traffic through the VPN
+$SCRIPTS/sacli --key 'vpn.client.routing.reroute_gw' --value 'true' ConfigPut
 
-# Install OpenVPN Access Server
-yum install -y openvpn-as
+# 6. Block access to VPN server services from clients (your latest request)
+$SCRIPTS/sacli --key 'vpn.server.routing.gateway_access' --value 'true' ConfigPut
 
-# Start and enable service
-systemctl start openvpnas
-systemctl enable openvpnas
+systemctl restart openvpnas
 
-# Wait for service to initialize
-sleep 20
-
-# Set admin password
-ADMIN_USER="openvpn"
-ADMIN_PASS="Admin@123"   # 🔴 Change this in real usage
-
-/usr/local/openvpn_as/scripts/sacli --user $ADMIN_USER --new_pass $ADMIN_PASS SetLocalPassword
-
-# Enable routing (optional but useful)
-echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
-sysctl -p
-
-# Print useful info
-echo "-------------------------------------"
-echo "OpenVPN Access Server Installed"
-echo "Admin UI: https://<EC2-PUBLIC-IP>:943/admin"
-echo "User UI : https://<EC2-PUBLIC-IP>:943"
-echo "Username: $ADMIN_USER"
-echo "Password: $ADMIN_PASS"
-echo "-------------------------------------"
+# 7. Save and start
+$SCRIPTS/sacli ConfigSync
+$SCRIPTS/sacli start
